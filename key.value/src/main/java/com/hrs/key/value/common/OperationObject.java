@@ -1,6 +1,7 @@
 package com.hrs.key.value.common;
 public class OperationObject {
     private String type;
+    private String directory;
     private String key;
     private String fileName;
     private String value;
@@ -37,6 +38,15 @@ public class OperationObject {
     {
         return this.value;
     }
+
+    public String getDirectory() {
+        return directory;
+    }
+
+    public void setDirectory(String directory) {
+        this.directory = directory;
+    }
+
     public void setTimestampValue(long timestampValue)
     {
         this.timestampValue=timestampValue;

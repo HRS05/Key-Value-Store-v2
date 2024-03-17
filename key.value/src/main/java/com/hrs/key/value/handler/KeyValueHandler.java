@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
 @Slf4j
-public class KeyValueHandler extends Thread implements KeyValueHandlerInterface {
+public class KeyValueHandler implements KeyValueHandlerInterface {
 
     private String fileName;
     private final String directory;
@@ -28,9 +28,10 @@ public class KeyValueHandler extends Thread implements KeyValueHandlerInterface 
             throw new KeyValueException("directory is null/size=0");
         this.fileName = null;
         this.directory = directory;
-        this.queue = new PriorityBlockingQueue<OperationObject>(100, comparator);
-        this.setDaemon(true);
-        start();
+        this.queue = new PriorityBlockingQueue<OperationObject>(1000000, comparator);
+//        this.setDaemon(true);
+//        start();
+        Thread.ofVirtual().start(this::run);
         try {
             this.keyValueMap = new KeyValueDataHandler(this.directory).populateMap();
         } catch (KeyValueException exception) {
@@ -104,7 +105,6 @@ public class KeyValueHandler extends Thread implements KeyValueHandlerInterface 
         return null;
     }
 
-    @Override
     public void run() {
         while (true) {
 //            System.out.println("queue on call for table path -> " + this.directory);
