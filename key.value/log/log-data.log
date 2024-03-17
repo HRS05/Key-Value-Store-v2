@@ -1,0 +1,14 @@
+24-03-15 10:15:22.098 [main] INFO  com.hrs.key.value.Application - Starting Application using Java 17.0.6 with PID 1237 (/Users/harshsharma/harsh/key-value/key.value/target/classes started by harshsharma in /Users/harshsharma/harsh/key-value/key.value) 
+24-03-15 10:15:22.101 [main] INFO  com.hrs.key.value.Application - No active profile set, falling back to 1 default profile: "default" 
+24-03-15 10:15:22.649 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http) 
+24-03-15 10:15:22.654 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"] 
+24-03-15 10:15:22.656 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat] 
+24-03-15 10:15:22.656 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19] 
+24-03-15 10:15:22.687 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext 
+24-03-15 10:15:22.688 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 557 ms 
+24-03-15 10:15:22.908 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"] 
+24-03-15 10:15:22.915 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '' 
+24-03-15 10:15:22.922 [main] INFO  com.hrs.key.value.Application - Started Application in 1.004 seconds (process running for 1.368) 
+24-03-15 10:15:28.127 [http-nio-8081-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet' 
+24-03-15 10:15:28.127 [http-nio-8081-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet' 
+24-03-15 10:15:28.128 [http-nio-8081-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms 

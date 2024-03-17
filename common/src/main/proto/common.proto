@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package com.microservices.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.key.value.grpc";
+
+service KeyValueService {
+  rpc createDatabase(CreateDatabase) returns (SuccessDetail) {}
+  rpc createTable(CreateTable) returns (SuccessDetail) {}
+  rpc setOrUpdateKey(SetOrUpdateKey) returns (SuccessDetail) {}
+  rpc getKey(GetOrDeleteKey) returns (SuccessDetail) {}
+  rpc deleteKey(GetOrDeleteKey) returns (SuccessDetail) {}
+}
+
+
+message CreateDatabase {
+  string database = 1;
+}
+message CreateTable {
+  string database = 1;
+  string table = 2;
+}
+
+message SetOrUpdateKey {
+  string database = 1;
+  string table = 2;
+  string key = 3;
+  string value = 4;
+}
+
+message GetOrDeleteKey {
+  string database = 1;
+  string table = 2;
+  string key = 3;
+}
+
+
+message ErrorDetail {
+  // Error code
+  string errorCode = 1;
+  //Error message
+  string message = 2;
+  // Additional metadata associated with the Error
+  map<string, string> metadata = 3;
+}
+
+message SuccessDetail {
+  //Success message
+  string message = 1;
+  // data
+  string data = 2;
+  // Additional metadata associated with the Success
+  map<string, string> metadata = 3;
+}
