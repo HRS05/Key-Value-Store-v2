@@ -24,19 +24,25 @@ public class MasterAPI {
     @GetMapping("/create/{database}/{table}")
     public ResponseEntity<?> createTable(@PathVariable("database") String database, @PathVariable("table") String table) throws  KeyValueException {
         keyValueMaster.createTable(database, table);
-        return null;
+        ResponseDTO rs = new ResponseDTO();
+        rs.setMessage("Table in database: "+database+" created successfully");
+        return ResponseEntity.ok(rs);
     }
 
     @DeleteMapping("/delete/{database}")
     public ResponseEntity<?> deleteDatabase(@PathVariable String database) throws KeyValueException {
         keyValueMaster.deleteDataBase(database);
-        return null;
+        ResponseDTO rs = new ResponseDTO();
+        rs.setMessage("Database deleted successfully");
+        return ResponseEntity.ok(rs);
     }
 
     @DeleteMapping ("/delete/{database}/{table}")
     public ResponseEntity<?> deleteTable(@PathVariable("database") String database, @PathVariable("table") String table) throws  KeyValueException {
         keyValueMaster.deleteTable(database, table);
-        return null;
+        ResponseDTO rs = new ResponseDTO();
+        rs.setMessage("Table in database: "+database+" deleted successfully");
+        return ResponseEntity.ok(rs);
     }
 
 }

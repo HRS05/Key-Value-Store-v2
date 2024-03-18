@@ -8,19 +8,17 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
 import java.util.Comparator;
-import java.util.PriorityQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
 @Slf4j
 public class KeyValueHandler implements KeyValueHandlerInterface {
 
-    private String fileName;
     private final String directory;
+    Comparator<OperationObject> comparator = Comparator.comparingLong(OperationObject::getTimestampValue);
+    private String fileName;
     private ConcurrentMap<String, Pair> keyValueMap = null;
     private PriorityBlockingQueue<OperationObject> queue = null;
-
-    Comparator<OperationObject> comparator = Comparator.comparingLong(OperationObject::getTimestampValue);
 
 
     public KeyValueHandler(String directory) throws KeyValueException {
@@ -125,10 +123,11 @@ public class KeyValueHandler implements KeyValueHandlerInterface {
                         //System.out.println("queue KeyValueHandler add operation got called -> key : " + key + " value : " + value + " fileName " + this.fileName);
                         this.fileName = new KeyValueDataHandler(this.directory).add(key, value, this.fileName);
                         String CurrentValue = this.keyValueMap.get(key).getValue();
-                        this.keyValueMap.replace(key, new Pair(null, CurrentValue), new Pair(this.fileName, CurrentValue));
+                        //this.keyValueMap.replace(key, new Pair(null, CurrentValue), new Pair(this.fileName, CurrentValue));
+                        this.keyValueMap.put(key, new Pair(this.fileName, CurrentValue));
                     } catch (Exception exception) {
                         this.queue.add(OJ);
-                        System.out.println("Exception from thread :-> " + exception.getMessage());
+                        System.out.println("Exception from thread (add operation) :-> " + exception.getMessage());
                     }
                 } else if (type == "edit") {
                     try {
@@ -142,11 +141,10 @@ public class KeyValueHandler implements KeyValueHandlerInterface {
                             fileName = pair.getKey();
                             OJ.setFileName(fileName);
                         }
-                        System.out.println("queue KeyValueHandler edit operation got called -> key : " + key + " value : " + value + " fileName " + fileName);
                         new KeyValueDataHandler(this.directory).edit(key, value, fileName);
                     } catch (Exception exception) {
                         this.queue.add(OJ);
-                        System.out.println("Exception from thread :-> " + exception.getMessage());
+                        System.out.println("Exception from thread (update operation) :-> " + exception.getMessage());
                     }
                 } else if (type == "remove") {
                     try {
@@ -164,7 +162,7 @@ public class KeyValueHandler implements KeyValueHandlerInterface {
                         new KeyValueDataHandler(this.directory).delete(key, fileName);
                     } catch (Exception exception) {
                         this.queue.add(OJ);
-                        System.out.println("Exception from thread :-> " + exception.getMessage());
+                        System.out.println("Exception from thread (delete operation) :-> " + exception.getMessage());
                     }
                 } else {
                     System.out.println("Invalid data in queue");

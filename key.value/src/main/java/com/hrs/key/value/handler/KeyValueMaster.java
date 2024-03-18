@@ -84,16 +84,16 @@ public class KeyValueMaster implements KeyValueMasterInterface {
     @Override
     public void createTable(String dataBase, String table) throws KeyValueException {
         if (dataBase == null || dataBase.trim().length() == 0)
-            throw new KeyValueException("error : from createTabel the data base name is empty/null");
+            throw new KeyValueException("error : from createTable the data base name is empty/null");
         if (table == null || table.trim().length() == 0)
-            throw new KeyValueException("error : from createTabel the tabel name is empty/null");
+            throw new KeyValueException("error : from createTable the table name is empty/null");
         dataBase = dataBase.trim();
         table = table.trim();
         if (!this.master.containsKey(dataBase))
-            throw new KeyValueException("error : from createTabel the data base " + dataBase + " not exists to create tabel " + table + ".");
+            throw new KeyValueException("error : from createTable the data base " + dataBase + " not exists to create table " + table + ".");
         ConcurrentMap<String, KeyValueHandler> obj = this.master.get(dataBase);
         if (obj.containsKey(table))
-            throw new KeyValueException("error : from createTabel the tabel " + table + " already exists.");
+            throw new KeyValueException("error : from createTable the table " + table + " already exists.");
         try {
             new KeyValueDataMaster(path).createTable(dataBase, table);
             System.out.println("dataBase " + dataBase + "   " + "table  " + table);
@@ -126,14 +126,14 @@ public class KeyValueMaster implements KeyValueMasterInterface {
         if (dataBase == null || dataBase.trim().length() == 0)
             throw new KeyValueException("error : from deleteTable the data base name is empty/null");
         if (table == null || table.trim().length() == 0)
-            throw new KeyValueException("error : from deleteTable the tabel name is empty/null");
+            throw new KeyValueException("error : from deleteTable the table name is empty/null");
         dataBase = dataBase.trim();
         table = table.trim();
         if (!this.master.containsKey(dataBase))
-            throw new KeyValueException("error : from deleteTable the data base " + dataBase + " not exists to delete tabel " + table + ".");
+            throw new KeyValueException("error : from deleteTable the data base " + dataBase + " not exists to delete table " + table + ".");
         ConcurrentMap<String, KeyValueHandler> obj = this.master.get(dataBase);
         if (!obj.containsKey(table))
-            throw new KeyValueException("error : from deleteTable the tabel " + table + " not exists.");
+            throw new KeyValueException("error : from deleteTable the table " + table + " not exists.");
         try {
             this.masterMap.get(dataBase).remove(table);
             this.master.get(dataBase).remove(table);
@@ -151,7 +151,7 @@ public class KeyValueMaster implements KeyValueMasterInterface {
         if (!this.master.containsKey(dataBase))
             throw new KeyValueException("master Map does not contain dataBase " + dataBase);
         if (!this.master.get(dataBase).containsKey(table))
-            throw new KeyValueException("master Map does not contain tabel " + table + " in database " + dataBase);
+            throw new KeyValueException("master Map does not contain table " + table + " in database " + dataBase);
         return this.master.get(dataBase).get(table);
     }
 }

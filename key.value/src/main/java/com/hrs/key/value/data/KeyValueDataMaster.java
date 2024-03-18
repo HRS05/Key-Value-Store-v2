@@ -22,7 +22,7 @@ public class KeyValueDataMaster implements KeyValueDataMasterInterface {
         }
     }
 
-    private ArrayList<String> getListOfTabel(String location) {
+    private ArrayList<String> getListOfTable(String location) {
         ArrayList<String> list = new ArrayList<>();
         File tableFile = new File(location);
         for (File table : tableFile.listFiles()) {
@@ -106,7 +106,7 @@ public class KeyValueDataMaster implements KeyValueDataMasterInterface {
 
         for (File dataBase : directoryFile.listFiles()) {
             if (dataBase.isDirectory())
-                masterMap.put(dataBase.getName(), getListOfTabel(this.path + File.separator + dataBase.getName()));
+                masterMap.put(dataBase.getName(), getListOfTable(this.path + File.separator + dataBase.getName()));
         }
         return masterMap;
     }
