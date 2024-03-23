@@ -17,6 +17,9 @@
 
 These updates collectively aim to enhance the project's performance, scalability, and interoperability, ushering in a new era of efficiency and versatility.
 
+## Architectural Views
+
+![image](./asset/kv2.jpg)
 
 
 

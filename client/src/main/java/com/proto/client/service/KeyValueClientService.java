@@ -19,21 +19,23 @@ public class KeyValueClientService {
             sd = synchronousClient.createDatabase(createDatabase);
         } catch (StatusRuntimeException sre) {
             System.out.println(sre.getMessage());
+            throw new KeyValueException(sre.getMessage());
         }
     }
 
-    public void createTable(String database, String table) {
+    public void createTable(String database, String table) throws KeyValueException  {
         SuccessDetail sd = SuccessDetail.newBuilder().build();
         try {
             CreateTable createTable = CreateTable.newBuilder().setDatabase(database).setTable(table).build();
             sd = synchronousClient.createTable(createTable);
         } catch (StatusRuntimeException sre) {
             System.out.println(sre.getMessage());
+            throw new KeyValueException(sre.getMessage());
         }
     }
 
 
-    public void setKey(String database, String table, String key, String value) {
+    public void setKey(String database, String table, String key, String value) throws KeyValueException  {
         SuccessDetail sd = SuccessDetail.newBuilder().build();
         try {
             SetOrUpdateKey setOrUpdateKey = SetOrUpdateKey.newBuilder()
@@ -45,10 +47,11 @@ public class KeyValueClientService {
             sd = synchronousClient.setOrUpdateKey(setOrUpdateKey);
         } catch (StatusRuntimeException sre) {
             System.out.println(sre.getMessage());
+            throw new KeyValueException(sre.getMessage());
         }
     }
 
-    public String getKey(String database, String table, String key) {
+    public String getKey(String database, String table, String key) throws KeyValueException  {
         SuccessDetail sd;
         String value = null;
         try {
@@ -61,11 +64,12 @@ public class KeyValueClientService {
             value = sd.getData();
         } catch (StatusRuntimeException sre) {
             System.out.println(sre.getMessage());
+            throw new KeyValueException(sre.getMessage());
         }
         return value;
     }
 
-    public void deleteKey(String database, String table, String key) {
+    public void deleteKey(String database, String table, String key) throws KeyValueException  {
         SuccessDetail sd;
         try {
             GetOrDeleteKey getOrDeleteKey = GetOrDeleteKey.newBuilder()
@@ -76,6 +80,7 @@ public class KeyValueClientService {
             sd = synchronousClient.deleteKey(getOrDeleteKey);
         } catch (StatusRuntimeException sre) {
             System.out.println(sre.getMessage());
+            throw new KeyValueException(sre.getMessage());
         }
     }
 

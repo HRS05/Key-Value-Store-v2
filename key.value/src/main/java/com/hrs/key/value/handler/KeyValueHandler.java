@@ -168,6 +168,10 @@ public class KeyValueHandler implements KeyValueHandlerInterface {
                     System.out.println("Invalid data in queue");
                 }
             }
+            try {
+                Thread.sleep(2000);
+            } catch (Exception e) {
+            }
         }
     }
 

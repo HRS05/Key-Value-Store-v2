@@ -8,6 +8,8 @@ option java_package = "com.key.value.grpc";
 service KeyValueService {
   rpc createDatabase(CreateDatabase) returns (SuccessDetail) {}
   rpc createTable(CreateTable) returns (SuccessDetail) {}
+  rpc deleteDatabase(CreateDatabase) returns (SuccessDetail) {}
+  rpc deleteTable(CreateTable) returns (SuccessDetail) {}
   rpc setOrUpdateKey(SetOrUpdateKey) returns (SuccessDetail) {}
   rpc getKey(GetOrDeleteKey) returns (SuccessDetail) {}
   rpc deleteKey(GetOrDeleteKey) returns (SuccessDetail) {}
