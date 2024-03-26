@@ -19,7 +19,7 @@ public class KeyValueService extends KeyValueServiceGrpc.KeyValueServiceImplBase
     private KeyValueMaster keyValueMaster;
 
     @Override
-    public void createDatabase(CreateDatabase request, StreamObserver<SuccessDetail> responseObserver) {
+    public void createDatabase(CreateOrDeleteDatabase request, StreamObserver<SuccessDetail> responseObserver) {
         String database = request.getDatabase();
         try {
             keyValueMaster.createDataBase(database);
@@ -33,7 +33,7 @@ public class KeyValueService extends KeyValueServiceGrpc.KeyValueServiceImplBase
     }
 
     @Override
-    public void createTable(CreateTable request, StreamObserver<SuccessDetail> responseObserver) {
+    public void createTable(CreateOrDeleteTable request, StreamObserver<SuccessDetail> responseObserver) {
         String database = request.getDatabase();
         String table = request.getTable();
 
@@ -44,6 +44,36 @@ public class KeyValueService extends KeyValueServiceGrpc.KeyValueServiceImplBase
             responseObserver.onError(Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
         }
         SuccessDetail successDetail = SuccessDetail.newBuilder().setMessage("Table created successfully in database "+database).build();
+        responseObserver.onNext(successDetail);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void deleteDatabase(CreateOrDeleteDatabase request, StreamObserver<SuccessDetail> responseObserver) {
+        String database = request.getDatabase();
+        try {
+            keyValueMaster.deleteDataBase(database);
+        } catch (KeyValueException e) {
+            log.error("Error cause at grpc service -> {}"+ e.getMessage());
+            responseObserver.onError(Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
+        }
+        SuccessDetail successDetail = SuccessDetail.newBuilder().setMessage("Database deleted successfully").build();
+        responseObserver.onNext(successDetail);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void deleteTable(CreateOrDeleteTable request, StreamObserver<SuccessDetail> responseObserver) {
+        String database = request.getDatabase();
+        String table = request.getTable();
+
+        try {
+            keyValueMaster.deleteTable(database, table);
+        } catch (KeyValueException e) {
+            log.error("Error cause at grpc service -> {}"+ e.getMessage());
+            responseObserver.onError(Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
+        }
+        SuccessDetail successDetail = SuccessDetail.newBuilder().setMessage("Table deleted successfully in database "+database).build();
         responseObserver.onNext(successDetail);
         responseObserver.onCompleted();
     }

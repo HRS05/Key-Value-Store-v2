@@ -6,20 +6,20 @@ option java_multiple_files = true;
 option java_package = "com.key.value.grpc";
 
 service KeyValueService {
-  rpc createDatabase(CreateDatabase) returns (SuccessDetail) {}
-  rpc createTable(CreateTable) returns (SuccessDetail) {}
-  rpc deleteDatabase(CreateDatabase) returns (SuccessDetail) {}
-  rpc deleteTable(CreateTable) returns (SuccessDetail) {}
+  rpc createDatabase(CreateOrDeleteDatabase) returns (SuccessDetail) {}
+  rpc createTable(CreateOrDeleteTable) returns (SuccessDetail) {}
+  rpc deleteDatabase(CreateOrDeleteDatabase) returns (SuccessDetail) {}
+  rpc deleteTable(CreateOrDeleteTable) returns (SuccessDetail) {}
   rpc setOrUpdateKey(SetOrUpdateKey) returns (SuccessDetail) {}
   rpc getKey(GetOrDeleteKey) returns (SuccessDetail) {}
   rpc deleteKey(GetOrDeleteKey) returns (SuccessDetail) {}
 }
 
 
-message CreateDatabase {
+message CreateOrDeleteDatabase {
   string database = 1;
 }
-message CreateTable {
+message CreateOrDeleteTable {
   string database = 1;
   string table = 2;
 }

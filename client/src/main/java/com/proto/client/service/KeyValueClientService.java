@@ -15,7 +15,7 @@ public class KeyValueClientService {
     public void createDatabase(String database) throws KeyValueException {
         SuccessDetail sd = SuccessDetail.newBuilder().build();
         try {
-            CreateDatabase createDatabase = CreateDatabase.newBuilder().setDatabase(database).build();
+            CreateOrDeleteDatabase createDatabase = CreateOrDeleteDatabase.newBuilder().setDatabase(database).build();
             sd = synchronousClient.createDatabase(createDatabase);
         } catch (StatusRuntimeException sre) {
             System.out.println(sre.getMessage());
@@ -26,8 +26,30 @@ public class KeyValueClientService {
     public void createTable(String database, String table) throws KeyValueException  {
         SuccessDetail sd = SuccessDetail.newBuilder().build();
         try {
-            CreateTable createTable = CreateTable.newBuilder().setDatabase(database).setTable(table).build();
+            CreateOrDeleteTable createTable = CreateOrDeleteTable.newBuilder().setDatabase(database).setTable(table).build();
             sd = synchronousClient.createTable(createTable);
+        } catch (StatusRuntimeException sre) {
+            System.out.println(sre.getMessage());
+            throw new KeyValueException(sre.getMessage());
+        }
+    }
+
+    public void deleteDatabase(String database) throws KeyValueException {
+        SuccessDetail sd = SuccessDetail.newBuilder().build();
+        try {
+            CreateOrDeleteDatabase deleteDatabase = CreateOrDeleteDatabase.newBuilder().setDatabase(database).build();
+            sd = synchronousClient.createDatabase(deleteDatabase);
+        } catch (StatusRuntimeException sre) {
+            System.out.println(sre.getMessage());
+            throw new KeyValueException(sre.getMessage());
+        }
+    }
+
+    public void deleteTable(String database, String table) throws KeyValueException  {
+        SuccessDetail sd = SuccessDetail.newBuilder().build();
+        try {
+            CreateOrDeleteTable deleteTable = CreateOrDeleteTable.newBuilder().setDatabase(database).setTable(table).build();
+            sd = synchronousClient.deleteTable(deleteTable);
         } catch (StatusRuntimeException sre) {
             System.out.println(sre.getMessage());
             throw new KeyValueException(sre.getMessage());

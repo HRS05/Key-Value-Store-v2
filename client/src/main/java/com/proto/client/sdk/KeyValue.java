@@ -25,10 +25,10 @@ public class KeyValue {
     }
 
     public static void deleteDatabase(String database) throws KeyValueException {
-
+        keyValueClientService.deleteDatabase(database);
     }
     public static void deleteTable(String database, String table) throws KeyValueException {
-
+        keyValueClientService.deleteTable(database,table);
     }
 
     public void set(String key, String value) throws KeyValueException {
