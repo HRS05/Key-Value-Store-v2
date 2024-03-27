@@ -23,14 +23,13 @@ public class ClientApplication {
 			KeyValue kv2 = new KeyValue("d2", "t2");
 
 			for (int i = 0; i < 1000; i++) {
-				kv1.set("hey-hhhgu-jjjjjjkjku" + i + i + i, "harsh skkk");
-				kv2.set("hey-hhhgu-jjjjjcdcdcdcdjkjku" + i + i + i, "harsh skkk");
-
+				kv1.set("Key" + i + i + i, "value"+i);
+				kv2.set("key" + i + i + i, "value"+i);
 			}
 
-			for (int i = 0; i < 500; i++) {
-				kv1.delete("hey-hhhgu-jjjjjjkjku" + i + i + i);
-				kv2.set("hey-hhhgu-jjjjjcdcdcdcdjkjku" + i + i + i, "hafwfwwrsh skkk");
+			for (int i = 501; i < 1000; i++) {
+				kv1.delete("Key" + i + i + i);
+				kv2.set("key" + i + i + i, "value"+i+i);
 			}
 		}catch (KeyValueException e) {
 

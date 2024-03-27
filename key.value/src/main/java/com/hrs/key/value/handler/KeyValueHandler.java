@@ -122,9 +122,9 @@ public class KeyValueHandler implements KeyValueHandlerInterface {
                     try {
                         //System.out.println("queue KeyValueHandler add operation got called -> key : " + key + " value : " + value + " fileName " + this.fileName);
                         this.fileName = new KeyValueDataHandler(this.directory).add(key, value, this.fileName);
-                        String CurrentValue = this.keyValueMap.get(key).getValue();
+                        //String CurrentValue = this.keyValueMap.get(key).getValue();
                         //this.keyValueMap.replace(key, new Pair(null, CurrentValue), new Pair(this.fileName, CurrentValue));
-                        this.keyValueMap.put(key, new Pair(this.fileName, CurrentValue));
+                        this.keyValueMap.put(key, new Pair(this.fileName, value));
                     } catch (Exception exception) {
                         this.queue.add(OJ);
                         System.out.println("Exception from thread (add operation) :-> " + exception.getMessage());
@@ -134,7 +134,7 @@ public class KeyValueHandler implements KeyValueHandlerInterface {
                         Pair pair;
                         if (fileName == null || fileName.length() == 0) {
                             pair = this.keyValueMap.get(key);
-                            if (pair.getKey() == null || pair.getKey().length() == 0) {
+                            if (pair == null || pair.getKey() == null || pair.getKey().length() == 0) {
                                 this.queue.add(OJ);
                                 continue;
                             }
@@ -151,7 +151,7 @@ public class KeyValueHandler implements KeyValueHandlerInterface {
                         Pair pair;
                         if (fileName == null || fileName.length() == 0) {
                             pair = this.keyValueMap.get(key);
-                            if (pair.getKey() == null || pair.getKey().length() == 0) {
+                            if (pair == null || pair.getKey() == null || pair.getKey().length() == 0) {
                                 this.queue.add(OJ);
                                 continue;
                             }
