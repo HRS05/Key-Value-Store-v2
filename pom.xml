@@ -16,7 +16,6 @@
 	<description>Key Value Communication using gRPC</description>
 	<modules>
 		<module>common</module>
-		<module>common-proto</module>
 		<module>key.value</module>
 		<module>client</module>
 	</modules>
@@ -43,7 +42,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>ceres_api</finalName>
 	</build>
 
 </project>
