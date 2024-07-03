@@ -84,9 +84,11 @@ public class KeyValueService extends KeyValueServiceGrpc.KeyValueServiceImplBase
         String table = request.getTable();
         String key = request.getKey();
         String value = request.getValue();
+        Long ttl = request.getTtl();
         try {
             KeyValueHandlerInterface kvh = keyValueMaster.getKeyValueHandler(database, table);
-            kvh.set(key, value);
+            if (ttl == 0L) ttl = null;
+            kvh.set(key, value, ttl);
         } catch (KeyValueException e) {
             log.error("Error cause at grpc service -> {}"+ e.getMessage());
             responseObserver.onError(Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
@@ -108,6 +110,7 @@ public class KeyValueService extends KeyValueServiceGrpc.KeyValueServiceImplBase
         } catch (KeyValueException e) {
             log.error("Error cause at grpc service -> {}"+ e.getMessage());
             responseObserver.onError(Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
+            return;
         }
         SuccessDetail successDetail = SuccessDetail.newBuilder().setData(value).build();
         responseObserver.onNext(successDetail);

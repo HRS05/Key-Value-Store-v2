@@ -19,7 +19,7 @@ public class HandlerAPI {
     @PostMapping("/{database}/{table}")
     public ResponseEntity<?> setKey(@PathVariable("database") String database, @PathVariable("table") String table, @RequestBody KeyValueDTO keyValueDTO) throws KeyValueException {
         KeyValueHandlerInterface kvh = keyValueMaster.getKeyValueHandler(database, table);
-        kvh.set(keyValueDTO.getKey(), keyValueDTO.getValue());
+        kvh.set(keyValueDTO.getKey(), keyValueDTO.getValue(), keyValueDTO.getTtl());
         ResponseDTO rs = new ResponseDTO();
         rs.setMessage("Value added in Table -> "+table+" successfully");
         return ResponseEntity.ok(rs);

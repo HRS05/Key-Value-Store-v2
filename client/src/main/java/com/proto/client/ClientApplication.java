@@ -16,22 +16,26 @@ public class ClientApplication {
 		KeyValue.setKeyValueClientService(kvcs);
 		KeyValue kv;
 		try {
-			KeyValue.createDatabase("d2");
-			KeyValue.createTable("d2", "t1");
-			KeyValue.createTable("d2", "t2");
+//			KeyValue.createDatabase("d2");
+//			KeyValue.createTable("d2", "t1");
+//			KeyValue.createTable("d2", "t2");
 			KeyValue kv1 = new KeyValue("d2", "t1");
 			KeyValue kv2 = new KeyValue("d2", "t2");
 
 			for (int i = 0; i < 1000; i++) {
-				kv1.set("Key" + i + i + i, "value"+i);
-				kv2.set("key" + i + i + i, "value"+i);
+				kv1.set("qabbasccwfdKey" + i + i + i, "qvalue"+i, 180000L);
+				kv2.set("qabbasccwdfkey" + i + i + i, "qvalue"+i);
 			}
 
-			for (int i = 501; i < 1000; i++) {
-				kv1.delete("Key" + i + i + i);
-				kv2.set("key" + i + i + i, "value"+i+i);
-			}
-		}catch (KeyValueException e) {
+//			for (int i = 0; i < 1000; i++) {
+//				try {
+//					String k = kv1.get("Key" + i + i + i);
+//					System.out.println("value -> "+ k);
+//				} catch (KeyValueException e) {
+//				}
+//
+//			}
+		}catch (Exception e) {
 
 		}
 

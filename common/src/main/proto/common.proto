@@ -29,6 +29,7 @@ message SetOrUpdateKey {
   string table = 2;
   string key = 3;
   string value = 4;
+  int64 ttl = 5;
 }
 
 message GetOrDeleteKey {

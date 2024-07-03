@@ -32,7 +32,11 @@ public class KeyValue {
     }
 
     public void set(String key, String value) throws KeyValueException {
-        keyValueClientService.setKey(this.database, this.table, key, value);
+        keyValueClientService.setKey(this.database, this.table, key, value, 0L);
+    }
+
+    public void set(String key, String value, Long ttl) throws KeyValueException {
+        keyValueClientService.setKey(this.database, this.table, key, value, ttl);
     }
     public void delete(String key) throws KeyValueException {
         keyValueClientService.deleteKey(this.database, this.table, key);

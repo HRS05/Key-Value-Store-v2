@@ -9,5 +9,7 @@ public class OperationObject {
     private String key;
     private String fileName;
     private String value;
-    private long timestampValue;
+
+    private Long ttl;
+    private Long timestampValue;
 }

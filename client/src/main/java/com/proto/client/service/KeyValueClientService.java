@@ -57,14 +57,17 @@ public class KeyValueClientService {
     }
 
 
-    public void setKey(String database, String table, String key, String value) throws KeyValueException  {
+    public void setKey(String database, String table, String key, String value, Long ttl) throws KeyValueException  {
         SuccessDetail sd = SuccessDetail.newBuilder().build();
+        long currentTimeMillis = System.currentTimeMillis();
+        if (ttl != null && ttl != 0) ttl += currentTimeMillis;
         try {
             SetOrUpdateKey setOrUpdateKey = SetOrUpdateKey.newBuilder()
                     .setDatabase(database)
                     .setTable(table)
                     .setKey(key)
                     .setValue(value)
+                    .setTtl(ttl)
                     .build();
             sd = synchronousClient.setOrUpdateKey(setOrUpdateKey);
         } catch (StatusRuntimeException sre) {

@@ -154,4 +154,9 @@ public class KeyValueMaster implements KeyValueMasterInterface {
             throw new KeyValueException("master Map does not contain table " + table + " in database " + dataBase);
         return this.master.get(dataBase).get(table);
     }
+
+    public ConcurrentMap<String, ConcurrentMap<String, KeyValueHandler>> getKeyValueHandlerMasterMap() throws KeyValueException {
+        return this.master;
+    }
+
 }

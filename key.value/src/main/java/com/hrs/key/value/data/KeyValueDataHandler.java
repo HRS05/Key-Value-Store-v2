@@ -2,6 +2,7 @@ package com.hrs.key.value.data;
 
 import com.hrs.key.value.common.Pair;
 import com.hrs.key.value.exception.KeyValueException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+@Slf4j
 public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
 
     private final String directory;
@@ -19,18 +21,24 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
     }
 
     @Override
-    public String add(String key, String value, String fileName) throws KeyValueException {
-        System.out.println("KeyValueDataHandler add operation got called -> key : " + key + " value : " + value + " fileName " + fileName);
+    public String add(String key, String value, String fileName, Long ttl) throws KeyValueException {
+        log.info("KeyValueDataHandler add operation got called -> key : " + key + " value : " + value + " fileName " + fileName);
         if (key == null || key.length() == 0) throw new KeyValueException("Key data is null/size=0");
         if (value == null || value.length() == 0) throw new KeyValueException("value data is null/size=0");
         if (fileName != null && fileName.length() == 0) throw new KeyValueException("File name to add value is size=0");
+
+        // setting up time to leave variable
+        String ttlString = null;
+        if (ttl == null) ttlString = "never";
+        else ttlString = ttl.toString();
+
         String newFileName = null;
         String currentDirectory;
 
         if (fileName == null) {
             newFileName = UUID.randomUUID() + ".data";
             currentDirectory = this.directory + newFileName;
-            System.out.println(currentDirectory);
+            log.info(currentDirectory);
             try {
                 File file = new File(currentDirectory);
                 if (!file.exists()) {
@@ -44,6 +52,8 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
                 randomAccessFile.writeBytes("\n");
                 randomAccessFile.writeBytes(value);
                 randomAccessFile.writeBytes("\n");
+                randomAccessFile.writeBytes(ttlString);
+                randomAccessFile.writeBytes("\n");
                 randomAccessFile.close();
                 return newFileName;
             } catch (IOException ioException) {
@@ -52,8 +62,10 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
         } else {
             try {
                 File currentFile = new File(this.directory + fileName);
-                if (!currentFile.exists())
-                    throw new KeyValueException("error : not expected (file to add not exists.)");
+                if (!currentFile.exists()) {
+                    log.warn("remove operation exceeds and file is deleted, Creating new file flow");
+                    return this.add(key, value, null, ttl);
+                }
                 RandomAccessFile currentRandomAccessFile;
                 currentRandomAccessFile = new RandomAccessFile(currentFile, "rw");
                 if (currentRandomAccessFile.length() == 0) {
@@ -66,7 +78,7 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
                     currentRandomAccessFile.close();
                     newFileName = UUID.randomUUID() + ".data";
                     currentDirectory = this.directory + newFileName;
-                    System.out.println(currentDirectory);
+                    log.info(currentDirectory);
                     try {
                         File file = new File(currentDirectory);
                         RandomAccessFile randomAccessFile;
@@ -76,6 +88,8 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
                         randomAccessFile.writeBytes(key);
                         randomAccessFile.writeBytes("\n");
                         randomAccessFile.writeBytes(value);
+                        randomAccessFile.writeBytes("\n");
+                        randomAccessFile.writeBytes(ttlString);
                         randomAccessFile.writeBytes("\n");
                         randomAccessFile.close();
                         return newFileName;
@@ -89,6 +103,8 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
                     currentRandomAccessFile.writeBytes(key);
                     currentRandomAccessFile.writeBytes("\n");
                     currentRandomAccessFile.writeBytes(value);
+                    currentRandomAccessFile.writeBytes("\n");
+                    currentRandomAccessFile.writeBytes(ttlString);
                     currentRandomAccessFile.writeBytes("\n");
                     currentRandomAccessFile.seek(0);
                     String strDataCount = String.valueOf(dataCount + 1);
@@ -105,14 +121,21 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
     }
 
     @Override
-    public void edit(String key, String value, String fileName) throws KeyValueException {
-        System.out.println("KeyValueDataHandler edit operation got called -> key : " + key + " value : " + value + " fileName " + fileName);
+    public void edit(String key, String value, String fileName, Long ttl) throws KeyValueException {
+        log.info("KeyValueDataHandler edit operation got called -> key : " + key + " value : " + value + " fileName " + fileName);
         if (key == null || key.length() == 0) throw new KeyValueException("Key data is null/size=0");
         if (value == null || value.length() == 0) throw new KeyValueException("value data is null/size=0");
         if (fileName == null || fileName.length() == 0)
             throw new KeyValueException("File name to update value is size=0");
+
+        // setting up time to leave variable
+        String ttlString = null;
+        if (ttl == null) ttlString = "never";
+        else ttlString = ttl.toString();
+
         RandomAccessFile currentRandomAccessFile = null;
         RandomAccessFile tempRandomAccessFile = null;
+
 
         try {
             boolean boolKeyFound = false;
@@ -148,7 +171,7 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
 
             if (boolKeyFound == false) {
                 currentRandomAccessFile.close();
-                throw new KeyValueException("erroe : Key not found for updation");
+                throw new KeyValueException("error : Key not found for updation");
             }
 
 
@@ -156,9 +179,15 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
             if (tempFile.exists()) tempFile.delete();
             tempRandomAccessFile = new RandomAccessFile(tempFile, "rw");
 
+            // removing ttl for current file
             currentRandomAccessFile.readLine();
+            currentRandomAccessFile.readLine();
+
             tempRandomAccessFile.writeBytes(value);
             tempRandomAccessFile.writeBytes("\n");
+            tempRandomAccessFile.writeBytes(ttlString);
+            tempRandomAccessFile.writeBytes("\n");
+
             while (currentRandomAccessFile.length() > currentRandomAccessFile.getFilePointer()) {
                 tempRandomAccessFile.writeBytes(currentRandomAccessFile.readLine());
                 tempRandomAccessFile.writeBytes("\n");
@@ -194,7 +223,7 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
 
     @Override
     public void delete(String key, String fileName) throws KeyValueException {
-        System.out.println("KeyValueDataHandler delete operation got called -> key : " + key + " fileName " + fileName);
+        log.info("KeyValueDataHandler delete operation got called -> key : " + key + " fileName " + fileName);
         if (key == null || key.length() == 0) throw new KeyValueException("Key data is null/size=0");
         if (fileName == null || fileName.length() == 0)
             throw new KeyValueException("File name to delete value is size=0");
@@ -247,7 +276,8 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
             if (tempFile.exists()) tempFile.delete();
             tempRandomAccessFile = new RandomAccessFile(tempFile, "rw");
 
-            currentRandomAccessFile.readLine();
+            currentRandomAccessFile.readLine(); // removing value
+            currentRandomAccessFile.readLine(); // removing ttlString
             while (currentRandomAccessFile.length() > currentRandomAccessFile.getFilePointer()) {
                 tempRandomAccessFile.writeBytes(currentRandomAccessFile.readLine());
                 tempRandomAccessFile.writeBytes("\n");
@@ -291,8 +321,8 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
     }
 
     @Override
-    public String get(String key, String fileName) throws KeyValueException {
-        System.out.println("KeyValueDataHandler get operation got called -> key : " + key + " fileName " + fileName);
+    public Pair get(String key, String fileName) throws KeyValueException {
+        log.info("KeyValueDataHandler get operation got called -> key : " + key + " fileName " + fileName);
         if (key == null || key.length() == 0) throw new KeyValueException("error : key is null/size=0");
         if (fileName == null || fileName.length() == 0)
             throw new KeyValueException("File name to delete value is size=0");
@@ -303,6 +333,9 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
             boolean boolKeyFound = false;
             String fileKey;
             String fileData;
+            String ttlString;
+            Long ttl;
+
             File currentFile = new File(this.directory + fileName);
             if (currentFile.exists() == false)
                 throw new KeyValueException("error : not expected (file not exists.) can not delete");
@@ -333,8 +366,11 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
                 throw new KeyValueException("error : key does not exists");
             }
             fileData = currentRandomAccessFile.readLine();
+            ttlString = currentRandomAccessFile.readLine();
+            if (ttlString.equals("never")) ttl = null;
+            else ttl = Long.parseLong(ttlString);
             currentRandomAccessFile.close();
-            return fileData;
+            return new Pair(key, fileData, ttl);
 
         } catch (IOException ioException) {
             if (currentRandomAccessFile != null) {
@@ -350,7 +386,7 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
 
     @Override
     public ConcurrentMap<String, Pair> populateMap() throws KeyValueException {
-        System.out.println("Population from KeyValueDataHandler is called");
+        log.info("Population from KeyValueDataHandler is called");
         ConcurrentMap<String, Pair> keyValueMap = new ConcurrentHashMap<String, Pair>();
         File[] files = new File(this.directory).listFiles();
         RandomAccessFile randomAccessFile = null;
@@ -375,10 +411,15 @@ public class KeyValueDataHandler implements KeyValueDataHandlerInterface {
                     }
                     String fileKey;
                     String fileValue;
+                    String ttlString;
+                    Long ttl;
                     while (randomAccessFile.length() > randomAccessFile.getFilePointer()) {
                         fileKey = randomAccessFile.readLine().trim();
                         fileValue = randomAccessFile.readLine().trim();
-                        Pair pair = new Pair(name, fileValue);
+                        ttlString = randomAccessFile.readLine().trim();
+                        if (ttlString.equals("never")) ttl = null;
+                        else ttl = Long.parseLong(ttlString);
+                        Pair pair = new Pair(name, fileValue, ttl);
                         keyValueMap.put(fileKey, pair);
                     }
                     randomAccessFile.close();
