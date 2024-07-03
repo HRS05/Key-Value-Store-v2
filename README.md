@@ -19,7 +19,7 @@ These updates collectively aim to enhance the project's performance, scalability
 
 ## Architectural Views
 
-![image](./asset/kv2.jpg)
+![image](./asset/kv2ttl.jpg)
 
 
 
